@@ -21,28 +21,14 @@ class ViewController: UIViewController {
         if userIsInTheMiddleOfTyping {
             let textCurrentlyInDisplay = display.text!
             
-            //this is a more elegant solution
-            if textCurrentlyInDisplay.rangeOfString(".") != nil && digit == "." {
+            //this is my own elegant solution
+            if textCurrentlyInDisplay.rangeOfString(".") == nil || digit != "." {
+                display!.text = textCurrentlyInDisplay + digit
+            } else
+            {
                 return
-            } else
-            {
-                display!.text = textCurrentlyInDisplay + digit
-            }
-            
-            //This is first try
-            //Exactly the same as above but in one line this
-            /*
-            if textCurrentlyInDisplay.rangeOfString(".") == nil {
-                display!.text = textCurrentlyInDisplay + digit
-            } else
-            {
-                if digit != "." {
-                    display!.text = textCurrentlyInDisplay + digit
-                    
-                }
-                
-                */
-            //}
+            }           
+           
             
         }
         else{

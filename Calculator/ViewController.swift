@@ -29,7 +29,7 @@ class ViewController: UIViewController {
             {
                 return
             }
-           
+            
             
         }
         else{
@@ -39,13 +39,13 @@ class ViewController: UIViewController {
                 display.text = "0."
             }
             else {
-                 display.text = digit
+                display.text = digit
             }
-           
+            
         }
         
         
-
+        
         userIsInTheMiddleOfTyping = true
     }
     
@@ -75,15 +75,21 @@ class ViewController: UIViewController {
         }
         displayValue = brain.result
         
-
-        if(brain.isPartialResult)
-        {
-            historyLabel!.text = brain.description + "..."
+        
+        if !brain.isCalculatorCleared {
+            if(brain.isPartialResult)
+            {
+                historyLabel!.text = brain.description + "..."
+            }
+            else
+            {
+                historyLabel!.text = brain.description + "="
+            }
+        } else {
+            historyLabel!.text = " "
         }
-        else
-        {
-            historyLabel!.text = brain.description + "="
-        }
+        
+        
         
     }
     

@@ -21,9 +21,11 @@ class CalculatorBrain {
     
     func setOperand(operand: Double) {
         accumulator = operand
+        isCalculatorCleared = false
         
     }
     
+   
     
     
     private var operations: Dictionary<String,Operation> = [
@@ -39,7 +41,8 @@ class CalculatorBrain {
         "÷": Operation.BinaryOperation({ $0 / $1 }),
         "+": Operation.BinaryOperation({ $0 + $1 }),
         "−": Operation.BinaryOperation({ $0 - $1 }),
-        "=": Operation.Equals
+        "=": Operation.Equals,
+        "C": Operation.ClearAll
     ]
     
     
@@ -55,9 +58,12 @@ class CalculatorBrain {
         case UnaryOperation((Double) -> (Double))
         case BinaryOperation((Double, Double) -> Double)
         case Equals
+        case ClearAll
     }
     
     var isAddingToHistoryDescription = true
+    
+    var isCalculatorCleared = false
     
     func performOperation(symbol: String) {
         if let operation = operations[symbol]
@@ -79,11 +85,17 @@ class CalculatorBrain {
                 pending = PendingBinaryOperationInfo(binaryFunction: function, firstoperand: accumulator)
             case .Equals:
                 executePendingBinaryOperation()
+            case.ClearAll:
+                accumulator = 0.0
+                description = " "
+                isCalculatorCleared = true
                 
                 
                 
             }
-           
+            
+            if( !isCalculatorCleared){
+            
             if isPartialResult && isAddingToHistoryDescription
             {
                 description += String(accumulator)
@@ -93,12 +105,13 @@ class CalculatorBrain {
                 
                 if symbol != "=" && isAddingToHistoryDescription
                 {
-                     description =  symbol + "(" + description + ")"
+                    description =  symbol + "(" + description + ")"
                 }
-               
+                
             }
-           
-           
+            
+        }
+        
         }
         
     }
@@ -112,7 +125,6 @@ class CalculatorBrain {
             {
                 description += String(accumulator)
             }
-            
             
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)
             pending = nil

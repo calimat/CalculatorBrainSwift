@@ -57,14 +57,22 @@ class CalculatorBrain {
         case Equals
     }
     
+    var isAddingToHistoryDescription = true
+    
     func performOperation(symbol: String) {
         if let operation = operations[symbol]
         {
             switch operation {
             case .Constant(let value):
+                
                 accumulator = value
                 
             case .UnaryOperation (let function):
+                if isPartialResult
+                {
+                    description += symbol + String(accumulator)
+                    isAddingToHistoryDescription = false
+                }
                 accumulator = function(accumulator)
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
@@ -76,14 +84,14 @@ class CalculatorBrain {
                 
             }
            
-            if(isPartialResult)
+            if isPartialResult && isAddingToHistoryDescription
             {
                 description += String(accumulator)
                 description += symbol
                 
             } else {
                 
-                if symbol != "="
+                if symbol != "=" && isAddingToHistoryDescription
                 {
                      description =  symbol + "(" + description + ")"
                 }
@@ -100,7 +108,12 @@ class CalculatorBrain {
     private func executePendingBinaryOperation()
     {
         if pending != nil {
-            description += String(accumulator)
+            if isAddingToHistoryDescription
+            {
+                description += String(accumulator)
+            }
+            
+            
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)
             pending = nil
         }

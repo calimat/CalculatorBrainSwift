@@ -16,11 +16,17 @@ class CalculatorBrain {
     
     private var accumulator = 0.0
     
+    var description = " "
+    
+    
     func setOperand(operand: Double) {
         accumulator = operand
+        
     }
     
-   private var operations: Dictionary<String,Operation> = [
+    
+    
+    private var operations: Dictionary<String,Operation> = [
         "π": Operation.Constant(M_PI),
         "e": Operation.Constant(M_E),
         "√": Operation.UnaryOperation(sqrt),
@@ -36,7 +42,15 @@ class CalculatorBrain {
         "=": Operation.Equals
     ]
     
-  private  enum Operation {
+    
+    
+    
+    
+    var isPartialResult: Bool {
+        return pending != nil ? true : false
+    }
+    
+    private  enum Operation {
         case Constant(Double)
         case UnaryOperation((Double) -> (Double))
         case BinaryOperation((Double, Double) -> Double)
@@ -49,6 +63,7 @@ class CalculatorBrain {
             switch operation {
             case .Constant(let value):
                 accumulator = value
+                
             case .UnaryOperation (let function):
                 accumulator = function(accumulator)
             case .BinaryOperation(let function):
@@ -57,17 +72,39 @@ class CalculatorBrain {
             case .Equals:
                 executePendingBinaryOperation()
                 
+                
+                
             }
+           
+            if(isPartialResult)
+            {
+                description += String(accumulator)
+                description += symbol
+                
+            } else {
+                
+                if symbol != "="
+                {
+                     description =  symbol + "(" + description + ")"
+                }
+               
+            }
+           
+           
         }
         
     }
     
+    
+    
     private func executePendingBinaryOperation()
     {
         if pending != nil {
+            description += String(accumulator)
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)
             pending = nil
         }
+        
     }
     
     private var pending: PendingBinaryOperationInfo?

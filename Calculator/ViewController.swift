@@ -10,6 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var historyLabel: UILabel!
     @IBOutlet weak var display: UILabel!
     
     var userIsInTheMiddleOfTyping = false;
@@ -42,6 +43,9 @@ class ViewController: UIViewController {
             }
            
         }
+        
+        
+
         userIsInTheMiddleOfTyping = true
     }
     
@@ -70,6 +74,16 @@ class ViewController: UIViewController {
             
         }
         displayValue = brain.result
+        
+
+        if(brain.isPartialResult)
+        {
+            historyLabel!.text = brain.description + "..."
+        }
+        else
+        {
+            historyLabel!.text = brain.description + "="
+        }
         
     }
     

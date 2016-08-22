@@ -30,8 +30,16 @@ class CalculatorBrain {
             {
                 if sequenceHistoryArray.count < maximumNumberofOperands
                 {
-                sequenceHistoryArray.append("...")
-                appendedThreePoints = true
+                    sequenceHistoryArray.append("...")
+                    appendedThreePoints = true
+                }
+                
+                if sequenceHistoryArray.count > maximumNumberofOperands {
+                    if sequenceHistoryArray.indexOf("...") != nil
+                    {
+                        sequenceHistoryArray.removeAtIndex(sequenceHistoryArray.indexOf("...")!)
+                    }
+                    
                 }
                 
             }
@@ -39,11 +47,11 @@ class CalculatorBrain {
             if appendedThreePoints && !isPartialResult
             {
                 if sequenceHistoryArray.indexOf("...") != nil{
-                     sequenceHistoryArray.removeAtIndex(sequenceHistoryArray.indexOf("...")!)
+                    sequenceHistoryArray.removeAtIndex(sequenceHistoryArray.indexOf("...")!)
                 }
-               
+                
             }
-           
+            
             if sequenceHistoryArray.count > 0
             {
                 return sequenceHistoryArray.joinWithSeparator("")
@@ -109,8 +117,9 @@ class CalculatorBrain {
             case .Constant(let value):
                 
                 accumulator = value
+                sequenceHistoryArray.append(symbol)
                 
-          
+                
                 
             case .UnaryOperation (let function):
                 if isPartialResult
@@ -122,11 +131,11 @@ class CalculatorBrain {
                 }
                 
                 if isAddingToHistoryDescription {
-                sequenceHistoryArray.insert("(", atIndex: 0)
-                sequenceHistoryArray.insert(symbol, atIndex: 0)
-                let lastElement = sequenceHistoryArray.last!
-                let indexOfLastElement = sequenceHistoryArray.indexOf(lastElement)
-                sequenceHistoryArray.insert(")", atIndex: indexOfLastElement!)
+                    sequenceHistoryArray.insert("(", atIndex: 0)
+                    sequenceHistoryArray.insert(symbol, atIndex: 0)
+                    let lastElement = sequenceHistoryArray.last!
+                    let indexOfLastElement = sequenceHistoryArray.indexOf(lastElement)
+                    sequenceHistoryArray.insert(")", atIndex: indexOfLastElement!)
                 }
                 
                 accumulator = function(accumulator)
@@ -146,7 +155,7 @@ class CalculatorBrain {
                 sequenceHistoryArray.append(symbol)
             case.ClearAll:
                 accumulator = 0.0
-          
+                
                 isCalculatorCleared = true
                 
                 
@@ -165,7 +174,7 @@ class CalculatorBrain {
         if pending != nil {
             if isAddingToHistoryDescription
             {
-               // description += String(accumulator)
+                // description += String(accumulator)
             }
             secondAccumulator = accumulator
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)

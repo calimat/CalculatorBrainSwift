@@ -127,6 +127,9 @@ class CalculatorBrain {
                     
                     let indexOfThreePoints = sequenceHistoryArray.indexOf("...")
                     sequenceHistoryArray[indexOfThreePoints!] = symbol
+                    let secondOperand = sequenceHistoryArray[indexOfThreePoints! + 1]
+                    sequenceHistoryArray[indexOfThreePoints! + 1] = "(" + secondOperand + ")"
+                    
                     isAddingToHistoryDescription = false
                 }
                 
@@ -145,6 +148,16 @@ class CalculatorBrain {
                 if sequenceHistoryArray.last! == "="
                 {
                     sequenceHistoryArray.removeLast()
+                }
+                if sequenceHistoryArray.contains("=")
+                {
+                    let indexOfEquals = sequenceHistoryArray.indexOf("=")
+                    let lastElement = sequenceHistoryArray.last!
+                    let indexOfLast = sequenceHistoryArray.indexOf(lastElement)
+                    if indexOfLast != indexOfEquals {
+                        sequenceHistoryArray.removeAll()
+                        sequenceHistoryArray.append(lastElement)
+                    }
                 }
                 sequenceHistoryArray.append(symbol)
                 

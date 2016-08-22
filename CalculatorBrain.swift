@@ -66,7 +66,6 @@ class CalculatorBrain {
     func setOperand(operand: Double) {
         accumulator = operand
         sequenceHistoryArray.append(String(operand))
-        isCalculatorCleared = false
         
     }
     
@@ -168,8 +167,9 @@ class CalculatorBrain {
                 sequenceHistoryArray.append(symbol)
             case.ClearAll:
                 accumulator = 0.0
+                sequenceHistoryArray.removeAll()
                 
-                isCalculatorCleared = true
+               
                 
                 
                 
@@ -185,11 +185,6 @@ class CalculatorBrain {
     private func executePendingBinaryOperation()
     {
         if pending != nil {
-            if isAddingToHistoryDescription
-            {
-                // description += String(accumulator)
-            }
-            secondAccumulator = accumulator
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)
             pending = nil
             

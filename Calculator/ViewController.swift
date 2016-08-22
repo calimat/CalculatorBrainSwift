@@ -75,21 +75,7 @@ class ViewController: UIViewController {
         }
         displayValue = brain.result
         historyLabel!.text = brain.description
-        /*
-        
-        if !brain.isCalculatorCleared {
-            if(brain.isPartialResult)
-            {
-                historyLabel!.text = brain.description + "..."
-            }
-            else
-            {
-                historyLabel!.text = brain.description + "="
-            }
-        } else {
-            historyLabel!.text = " "
-        }
-        */
+       
         
         
         

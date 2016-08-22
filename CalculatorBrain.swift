@@ -161,17 +161,12 @@ class CalculatorBrain {
                 sequenceHistoryArray.append(symbol)
                 
                 
-                
             case .Equals:
                 executePendingBinaryOperation()
                 sequenceHistoryArray.append(symbol)
             case.ClearAll:
                 accumulator = 0.0
-                sequenceHistoryArray.removeAll()
-                
-               
-                
-                
+                sequenceHistoryArray.removeAll()                
                 
             }
             

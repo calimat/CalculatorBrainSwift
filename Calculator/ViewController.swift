@@ -74,7 +74,8 @@ class ViewController: UIViewController {
             
         }
         displayValue = brain.result
-        
+        historyLabel!.text = brain.description
+        /*
         
         if !brain.isCalculatorCleared {
             if(brain.isPartialResult)
@@ -88,6 +89,7 @@ class ViewController: UIViewController {
         } else {
             historyLabel!.text = " "
         }
+        */
         
         
         

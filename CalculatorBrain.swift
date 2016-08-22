@@ -16,16 +16,53 @@ class CalculatorBrain {
     
     private var accumulator = 0.0
     
-    var description = " "
+    private var secondAccumulator = 0.0
     
+    private var appendedThreePoints = false
+    
+    private var maximumNumberofOperands = 3
+    
+    var description: String
+        {
+        get {
+            
+            if isPartialResult
+            {
+                if sequenceHistoryArray.count < maximumNumberofOperands
+                {
+                sequenceHistoryArray.append("...")
+                appendedThreePoints = true
+                }
+                
+            }
+            
+            if appendedThreePoints && !isPartialResult
+            {
+                if sequenceHistoryArray.indexOf("...") != nil{
+                     sequenceHistoryArray.removeAtIndex(sequenceHistoryArray.indexOf("...")!)
+                }
+               
+            }
+           
+            if sequenceHistoryArray.count > 0
+            {
+                return sequenceHistoryArray.joinWithSeparator("")
+            }
+            return " "
+        }
+        
+    }
+    
+    var sequenceHistoryArray =  [String]()
     
     func setOperand(operand: Double) {
         accumulator = operand
+        sequenceHistoryArray.append(String(operand))
         isCalculatorCleared = false
         
     }
     
-   
+    
     
     
     private var operations: Dictionary<String,Operation> = [
@@ -73,45 +110,50 @@ class CalculatorBrain {
                 
                 accumulator = value
                 
+          
+                
             case .UnaryOperation (let function):
                 if isPartialResult
                 {
-                    description += symbol + String(accumulator)
+                    
+                    let indexOfThreePoints = sequenceHistoryArray.indexOf("...")
+                    sequenceHistoryArray[indexOfThreePoints!] = symbol
                     isAddingToHistoryDescription = false
                 }
+                
+                if isAddingToHistoryDescription {
+                sequenceHistoryArray.insert("(", atIndex: 0)
+                sequenceHistoryArray.insert(symbol, atIndex: 0)
+                let lastElement = sequenceHistoryArray.last!
+                let indexOfLastElement = sequenceHistoryArray.indexOf(lastElement)
+                sequenceHistoryArray.insert(")", atIndex: indexOfLastElement!)
+                }
+                
                 accumulator = function(accumulator)
             case .BinaryOperation(let function):
                 executePendingBinaryOperation()
                 pending = PendingBinaryOperationInfo(binaryFunction: function, firstoperand: accumulator)
+                if sequenceHistoryArray.last! == "="
+                {
+                    sequenceHistoryArray.removeLast()
+                }
+                sequenceHistoryArray.append(symbol)
+                
+                
+                
             case .Equals:
                 executePendingBinaryOperation()
+                sequenceHistoryArray.append(symbol)
             case.ClearAll:
                 accumulator = 0.0
-                description = " "
+          
                 isCalculatorCleared = true
                 
                 
                 
             }
             
-            if( !isCalculatorCleared){
             
-            if isPartialResult && isAddingToHistoryDescription
-            {
-                description += String(accumulator)
-                description += symbol
-                
-            } else {
-                
-                if symbol != "=" && isAddingToHistoryDescription
-                {
-                    description =  symbol + "(" + description + ")"
-                }
-                
-            }
-            
-        }
-        
         }
         
     }
@@ -123,11 +165,12 @@ class CalculatorBrain {
         if pending != nil {
             if isAddingToHistoryDescription
             {
-                description += String(accumulator)
+               // description += String(accumulator)
             }
-            
+            secondAccumulator = accumulator
             accumulator = pending!.binaryFunction(pending!.firstoperand, accumulator)
             pending = nil
+            
         }
         
     }
